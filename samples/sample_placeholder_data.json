@@ -1,0 +1,18 @@
+{
+  "contract_title": "Software Development Agreement",
+  "contract_no": "CNT-2026-0001",
+  "contract_date": "2026-04-14",
+  "client_name": "ABC Manufacturing LLC",
+  "client_address": "123 River Street, Dallas, TX",
+  "contractor_name": "Delta Digital Services",
+  "contractor_address": "88 Main Avenue, Austin, TX",
+  "start_date": "2026-05-01",
+  "end_date": "2026-12-31",
+  "contract_value": "125,000.00",
+  "scope_of_work": "Design, build, test, and deploy internal procurement portal.",
+  "payment_terms": "30% advance, 40% on milestone-2, 30% on final delivery.",
+  "special_conditions": "Source code ownership transfers to client upon final payment.",
+  "prepared_by": "John Smith",
+  "approved_by": "Mary Johnson",
+  "status": "Draft"
+}
