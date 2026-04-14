@@ -1,125 +1,98 @@
-# CreateContract - Offline Windows Desktop Contract Generator
+# Offline Browser Contract Generator (No Backend)
 
-A complete offline desktop application for Windows to fill contract data into existing `.docx` templates and generate final `.docx` + `.pdf` documents automatically.
+A complete **offline**, **portable**, **browser-only** contract generation app that runs by opening `index.html` directly.
 
-## Features Included
+## ✅ What this app is
 
-- Fully offline operation (no cloud APIs, no internet requirement during use)
-- Desktop GUI with modern light theme and sidebar navigation
-- Modules/pages:
-  - Dashboard
-  - New Contract
-  - Edit Contract (from records)
-  - Contract Records
-  - Template Settings
-  - Export / Generate Document
-  - User Settings
-- Load/replace Microsoft Word template (`.docx`)
-- Placeholder mapping configuration
-- SQLite local database storage
-- Save + edit contracts
-- Search/filter by contract number, title, client, contractor, date
-- Generate `.docx` and `.pdf`
-- Multi-template support + template type dropdown
-- Auto contract reference number (`CNT-YYYY-####`)
-- Status handling (`Draft`, `Final`, `Cancelled`, `Expired`)
-- Contract history log + audit trail tables
-- Export records to Excel
-- Backup and restore local database
-- Long text fields supported
+- Pure frontend app using only:
+  - `HTML`
+  - `CSS`
+  - `Vanilla JavaScript`
+- No backend, no server, no localhost, no database server, no Python/Node/PHP.
+- No internet needed during use.
+- No CDN or online APIs.
+- Uses browser `localStorage` for all records/templates/settings.
+
+## Run (zero setup)
+
+1. Download/copy the folder anywhere.
+2. Double-click `index.html` (or open it in your browser).
+3. Start creating and managing contracts offline.
+
+## Modules included
+
+1. Dashboard
+2. New Contract Form (and Edit flow)
+3. Saved Records
+4. Template Settings
+5. Contract Preview
+6. Export / Print
+7. Backup / Restore
+
+## Core capabilities
+
+- Save, edit, update, duplicate, delete contract records (localStorage)
+- Search records by contract number/title/client/contractor/date/status
+- Auto-generate contract reference number (`CNT-YYYY-####`)
 - Required field validation
-- Preview window before generation
-- Output folder selection + auto-create folders
-- Safe duplicate generation (auto suffix `_1`, `_2`, etc.)
+- Status support: Draft, Final, Cancelled, Expired
+- Multi-template support with template type dropdown
+- Placeholder mapping support (`{{placeholder}} -> field`)
+- Professional print-ready contract preview
+- Print/save as PDF via browser print dialog
+- Export all records/templates/settings to JSON backup
+- Restore from JSON backup
+- Export contract list to CSV (Excel-compatible)
+- Export printable contract preview as standalone HTML
 
-## Tech Stack
+## Important .docx note (browser-only limitation)
 
-- Python 3.11+
-- `customtkinter` for desktop UI
-- SQLite for local storage
-- `docxtpl` for placeholder replacement while preserving Word formatting
-- `docx2pdf` / `pywin32` for Word to PDF conversion (Windows)
+In strict browser-only offline mode without parser libraries/backend, reliable direct editing of uploaded `.docx` content is not practical.
 
-## Project Structure
+This project implements the practical approach:
+
+- Use professional **HTML contract templates** with placeholders for generation/preview/print.
+- Optional `.docx` upload is accepted as metadata/reference in template settings (file name/size/type), so users can track which source Word template the HTML version corresponds to.
+
+## File structure
 
 ```text
-CreateContract/
-├─ app/
-│  ├─ main.py
-│  ├─ models.py
-│  └─ services/
-│     ├─ database.py
-│     ├─ sample_assets.py
-│     └─ template_engine.py
-├─ assets/
-│  └─ templates/
-│     └─ sample_contract_template.docx   (auto-created on first run if missing)
-├─ data/
-│  └─ contracts.db                        (auto-created)
-├─ output/                                (auto-created)
-├─ backups/
-├─ requirements.txt
-├─ sample_schema.sql
-├─ sample_placeholder_mapping.json
-└─ sample_contract_template_format.md
+.
+├─ index.html
+├─ style.css
+├─ app.js
+├─ modules.js
+├─ templates.js
+├─ storage.js
+├─ samples/
+│  ├─ sample_placeholder_data.json
+│  └─ sample_contract_template.html
+└─ README.md
 ```
 
-## Quick Start (Local Run)
+## Template placeholders
 
-1. Create and activate virtual environment:
+Supported placeholders:
 
-```bash
-python -m venv .venv
-.venv\Scripts\activate
-```
+- `{{contract_title}}`
+- `{{contract_no}}`
+- `{{contract_date}}`
+- `{{client_name}}`
+- `{{client_address}}`
+- `{{contractor_name}}`
+- `{{contractor_address}}`
+- `{{start_date}}`
+- `{{end_date}}`
+- `{{contract_value}}`
+- `{{scope_of_work}}`
+- `{{payment_terms}}`
+- `{{special_conditions}}`
+- `{{prepared_by}}`
+- `{{approved_by}}`
+- `{{status}}`
 
-2. Install dependencies:
+## Data safety note
 
-```bash
-pip install -r requirements.txt
-```
+Because storage is in browser localStorage only, data can be lost if browser storage is cleared.
 
-3. Run app:
-
-```bash
-python -m app.main
-```
-
-## Using Your Own Template
-
-1. Open **Template Settings**.
-2. Click **Browse Template** and select your existing `.docx` template.
-3. Configure placeholder mapping (`{{placeholder}}` -> form field).
-4. Save template configuration.
-5. In **New Contract**, choose template type and fill form.
-6. Click **Generate Word/PDF** and choose output folder.
-
-## PDF Generation Notes
-
-- For best PDF conversion on Windows, install Microsoft Word locally.
-- The app tries `docx2pdf`, then `win32com` fallback.
-- If Word is unavailable, `.docx` is still generated and a clear error is shown for PDF.
-
-## Database Schema and Mapping Samples
-
-- SQLite schema: `sample_schema.sql`
-- Placeholder mapping sample: `sample_placeholder_mapping.json`
-- Sample template placeholder format: `sample_contract_template_format.md`
-
-## Build Windows EXE (PyInstaller)
-
-```bash
-pip install pyinstaller
-pyinstaller --noconfirm --windowed --name CreateContract --add-data "assets;assets" --add-data "data;data" app/main.py
-```
-
-Executable output:
-
-- `dist/CreateContract/CreateContract.exe`
-
-## Offline/Production Notes
-
-- No internet API calls are used by application logic.
-- All data is stored locally in SQLite file (`data/contracts.db`).
-- Template, mapping, output files remain on local machine.
-
+Use **Backup / Restore** regularly and keep JSON exports safely.

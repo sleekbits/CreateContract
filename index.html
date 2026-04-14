@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Offline Contract Generator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <h1>Contract Suite</h1>
+      <nav id="sidebarNav">
+        <button data-page="dashboard" class="active">Dashboard</button>
+        <button data-page="new-contract">New Contract Form</button>
+        <button data-page="saved-records">Saved Records</button>
+        <button data-page="template-settings">Template Settings</button>
+        <button data-page="contract-preview">Contract Preview</button>
+        <button data-page="export-print">Export / Print</button>
+        <button data-page="backup-restore">Backup / Restore</button>
+      </nav>
+      <p class="storage-note">
+        Records are stored in this browser only (localStorage) unless you export a backup.
+      </p>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <h2 id="pageTitle">Dashboard</h2>
+        <div id="toast" class="toast hidden"></div>
+      </header>
+
+      <section id="dashboard" class="page active">
+        <div class="cards" id="dashboardCards"></div>
+      </section>
+
+      <section id="new-contract" class="page">
+        <form id="contractForm" class="panel form-grid">
+          <div class="field">
+            <label>Template Type</label>
+            <select id="templateId"></select>
+          </div>
+          <div class="field">
+            <label>Contract Number *</label>
+            <div class="inline-row">
+              <input id="contract_no" required />
+              <button type="button" id="regenNo" class="ghost">Regenerate</button>
+            </div>
+          </div>
+          <div class="field"><label>Contract Title *</label><input id="contract_title" required /></div>
+          <div class="field"><label>Contract Date *</label><input type="date" id="contract_date" required /></div>
+          <div class="field"><label>Client Name *</label><input id="client_name" required /></div>
+          <div class="field"><label>Contractor Name *</label><input id="contractor_name" required /></div>
+          <div class="field"><label>Start Date</label><input type="date" id="start_date" /></div>
+          <div class="field"><label>End Date</label><input type="date" id="end_date" /></div>
+          <div class="field"><label>Contract Value</label><input id="contract_value" placeholder="0.00" /></div>
+          <div class="field"><label>Status</label>
+            <select id="status">
+              <option>Draft</option><option>Final</option><option>Cancelled</option><option>Expired</option>
+            </select>
+          </div>
+          <div class="field full"><label>Client Address</label><textarea id="client_address" rows="2"></textarea></div>
+          <div class="field full"><label>Contractor Address</label><textarea id="contractor_address" rows="2"></textarea></div>
+          <div class="field full"><label>Scope of Work</label><textarea id="scope_of_work" rows="5"></textarea></div>
+          <div class="field full"><label>Payment Terms</label><textarea id="payment_terms" rows="4"></textarea></div>
+          <div class="field full"><label>Special Conditions</label><textarea id="special_conditions" rows="4"></textarea></div>
+          <div class="field"><label>Prepared By</label><input id="prepared_by" /></div>
+          <div class="field"><label>Approved By</label><input id="approved_by" /></div>
+
+          <div class="actions full">
+            <button type="button" id="saveBtn">Save</button>
+            <button type="button" id="updateBtn">Update</button>
+            <button type="button" id="previewBtn" class="ghost">Preview</button>
+            <button type="button" id="duplicateBtn" class="ghost">Duplicate</button>
+            <button type="reset" id="resetBtn" class="ghost">Reset</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="saved-records" class="page">
+        <div class="panel">
+          <div class="toolbar">
+            <input id="searchInput" placeholder="Search by no/title/client/contractor/date/status" />
+            <button id="exportCsvBtn" class="ghost">Export CSV</button>
+            <button id="deleteBtn" class="danger">Delete Selected</button>
+          </div>
+          <div class="table-wrap">
+            <table id="recordsTable">
+              <thead>
+                <tr><th>Select</th><th>ID</th><th>Contract No</th><th>Title</th><th>Client</th><th>Contractor</th><th>Date</th><th>Status</th><th>Updated</th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="template-settings" class="page">
+        <div class="panel form-grid">
+          <div class="field"><label>Template Name *</label><input id="tpl_name" /></div>
+          <div class="field"><label>Template Type *</label><input id="tpl_type" /></div>
+          <div class="field full"><label>Template HTML (use placeholders like {{client_name}})</label><textarea id="tpl_html" rows="14"></textarea></div>
+          <div class="field full">
+            <label>Optional: Upload .docx file (stored as reference only; browser-only offline mode cannot reliably edit .docx without extra parser libraries)</label>
+            <input id="tpl_docx" type="file" accept=".docx" />
+          </div>
+          <div class="field full">
+            <label>Placeholder Mapping (JSON)</label>
+            <textarea id="tpl_mapping" rows="8"></textarea>
+          </div>
+          <div class="actions full">
+            <button type="button" id="saveTemplateBtn">Save Template</button>
+            <button type="button" id="newTemplateBtn" class="ghost">New Template</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="contract-preview" class="page">
+        <div class="panel">
+          <div class="toolbar">
+            <button id="refreshPreviewBtn">Refresh Preview</button>
+            <button id="printPreviewBtn" class="ghost">Print</button>
+          </div>
+          <article id="previewDocument" class="contract-document"></article>
+        </div>
+      </section>
+
+      <section id="export-print" class="page">
+        <div class="panel">
+          <div class="actions">
+            <button id="exportJsonBtn">Export All Records (JSON)</button>
+            <button id="exportHtmlBtn" class="ghost">Export Current Preview (HTML)</button>
+            <button id="printBtn" class="ghost">Print / Save as PDF</button>
+          </div>
+          <p class="hint">Tip: click Print and choose <strong>Save as PDF</strong> from browser print options.</p>
+        </div>
+      </section>
+
+      <section id="backup-restore" class="page">
+        <div class="panel">
+          <div class="actions">
+            <button id="downloadBackupBtn">Download Backup JSON</button>
+            <label class="upload-btn">Restore from Backup JSON <input id="restoreFile" type="file" accept="application/json" /></label>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="templates.js"></script>
+  <script src="storage.js"></script>
+  <script src="modules.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
